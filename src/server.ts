@@ -8,12 +8,34 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
- 
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
-}));
+ const allowedOrigins = [
+  "http://localhost:3000",
+  "https://mentor-match-tau.vercel.app",
+  "https://mentor-match-mystes-projects-9eb0432a.vercel.app",
+  "https://mentor-match-git-main-mystes-projects-9eb0432a.vercel.app",
+  "https://mentor-match-r34yrspcm-mystes-projects-9eb0432a.vercel.app"
+  // ✅ your deployed frontend domain
+];
 
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+ app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -30,8 +52,7 @@ app.get('/api/health', (req: Request, res: Response) => {
  
 app.use('/api/auth', authRoutes);
 console.log('✅ Auth routes mounted successfully!');
-
-// Initializing the database and start server
+ 
 const startServer = async () => {
   try {
      
@@ -69,60 +90,4 @@ const startServer = async () => {
 startServer();
 
 export default app;
-
-
-//  import express from 'express';
-// import cors from 'cors';
-// import dotenv from 'dotenv';
-// import connectDB from './config/database';
-// import authRoutes from './routes/auth';
-
-// // Load environment variables
-// dotenv.config();
-
-// const app = express();
-// const PORT = process.env.PORT || 5000;
-
-// // Connect to MongoDB
-// connectDB();
-
-// // Middleware
-// app.use(cors({
-//   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-//   credentials: true
-// }));
-// app.use(express.json({ limit: '10mb' }));
-// app.use(express.urlencoded({ extended: true }));
-
-// // Routes
-// app.use('/api/auth', authRoutes);
-
-// // Health check endpoint
-// app.get('/api/health', (req, res) => {
-//   res.status(200).json({ 
-//     message: 'DSA Incubator Hub API is running!',
-//     timestamp: new Date().toISOString(),
-//     environment: process.env.NODE_ENV || 'development'
-//   });
-// });
-
-// // 404 handler
-// app.use('*', (req, res) => {
-//   res.status(404).json({ message: 'Route not found' });
-// });
-
-// // Global error handler
-// app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-//   console.error('Global error handler:', err);
-//   res.status(500).json({ 
-//     message: 'Internal server error',
-//     error: process.env.NODE_ENV === 'development' ? err.message : undefined
-//   });
-// });
-
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-//   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-// });
-
-// export default app;
+ 

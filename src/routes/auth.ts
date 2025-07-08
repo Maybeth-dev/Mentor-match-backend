@@ -58,20 +58,19 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         email: savedUser.email,
         role: savedUser.role 
       },
-      process.env.JWT_SECRET || 'your-fallback-secret-key',
+      process.env.JWT_SECRET || 'my-fallback-secret-key',
       { expiresIn: '7d' }
     );
 
-     
-   res.cookie('token', token, {
+        res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    })
-    .status(201)
-    .json({
-      message: 'User created successfully',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",  
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
+    res.status(201).json({
+      message: "User created successfully",
       user: {
         id: savedUser._id,
         email: savedUser.email,
@@ -81,6 +80,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         profile: savedUser.profile
       }
     });
+
 
   } catch (error) {
     console.error('Registration error:', error);
@@ -143,7 +143,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
     .cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     })
     .status(200)
