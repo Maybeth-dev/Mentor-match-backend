@@ -15,7 +15,7 @@ router.get('/users', authMiddleware, requireAdmin, async (req: Request, res: Res
   }
 });
 
-// Update role
+ 
 router.put('/users/:id/role', authMiddleware, requireAdmin, async (req: Request, res: Response): Promise<Response> => {
   try {
     const { role } = req.body;

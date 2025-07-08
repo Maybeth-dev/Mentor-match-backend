@@ -39,7 +39,7 @@ router.post('/', authMiddleware, async (req: Request, res: Response): Promise<vo
 
     const savedRequest = await newRequest.save();
     
-    // Populate users details
+    
     const populatedRequest = await MentorshipRequest.findById(savedRequest._id)
       .populate('menteeId', 'firstName lastName email profile')
       .populate('mentorId', 'firstName lastName email profile');
@@ -106,7 +106,7 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response): Promise<
       return;
     }
 
-    // IT Checks if request is still pending
+    // IT Checks if request is stilll pending
     if (request.status !== 'pending') {
       res.status(400).json({ message: 'Request has already been responded to' });
       return;
@@ -143,8 +143,7 @@ router.get('/:id', authMiddleware, async (req: Request, res: Response): Promise<
       res.status(404).json({ message: 'Request not found' });
       return;
     }
-
-    // Simple check - convert ObjectIds to strings for comparison
+    
     const menteeIdStr = request.menteeId.toString();
     const mentorIdStr = request.mentorId.toString();
     

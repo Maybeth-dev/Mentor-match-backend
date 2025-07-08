@@ -27,12 +27,11 @@ app.get('/api/health', (req: Request, res: Response) => {
     database: 'connected'  
   });
 });
-
-// Auth routes
+ 
 app.use('/api/auth', authRoutes);
 console.log('✅ Auth routes mounted successfully!');
 
-// Initialize database and start server
+// Initializing the database and start server
 const startServer = async () => {
   try {
      
@@ -51,9 +50,8 @@ const startServer = async () => {
         message: 'Internal server error',
         error: process.env.NODE_ENV === 'development' ? err.message : undefined
       });
-    });
+    }); 
 
-    // Start server
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);

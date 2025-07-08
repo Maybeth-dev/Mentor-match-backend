@@ -12,8 +12,8 @@ const connectDB = async (): Promise<void> => {
     console.log('MongoDB URI (masked):', mongoUri.replace(/\/\/.*@/, '//***:***@'));
 
     const conn = await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 30000, // 30 seconds
-      socketTimeoutMS: 45000, // 45 seconds
+      serverSelectionTimeoutMS: 30000, // 30secs
+      socketTimeoutMS: 45000, // 45secs
       maxPoolSize: 10,
       connectTimeoutMS: 30000,
     });
@@ -21,8 +21,7 @@ const connectDB = async (): Promise<void> => {
     console.log(`✅ MongoDB Connected Successfully!`);
     console.log(`📡 Host: ${conn.connection.host}`);
     console.log(`🗃️  Database: ${conn.connection.name}`);
-    
-    // Handle connection events
+
     mongoose.connection.on('connected', () => {
       console.log('🟢 Mongoose connected to MongoDB');
     });
@@ -38,8 +37,7 @@ const connectDB = async (): Promise<void> => {
     mongoose.connection.on('reconnected', () => {
       console.log('🟢 Mongoose reconnected to MongoDB');
     });
-
-    // Handle app termination
+ 
     process.on('SIGINT', async () => {
       await mongoose.connection.close();
       console.log('🔴 Mongoose connection closed due to app termination');

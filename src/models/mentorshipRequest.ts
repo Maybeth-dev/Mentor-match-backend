@@ -46,7 +46,7 @@ const MentorshipRequestSchema: Schema = new Schema({
   }
 });
 
-// Create compound index to prevent duplicate pending/accepted requests
+// Creating a compound index to prevent duplicate pending/accepted requests
 MentorshipRequestSchema.index({ menteeId: 1, mentorId: 1, status: 1 });
 
 export default mongoose.model<IMentorshipRequest>('MentorshipRequest', MentorshipRequestSchema);

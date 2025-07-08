@@ -38,8 +38,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction):
     res.status(401).json({ message: 'Invalid token' });
   }
 };
-
-// Role-based middleware
+ 
 export const requireRole = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user) {

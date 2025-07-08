@@ -3,9 +3,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/User';
 
-const router = express.Router();
+const router = express.Router(); 
 
-// Test route - simple and clean
 router.get('/test', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Auth routes working!' });
 });
@@ -15,26 +14,24 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password, firstName, lastName, role } = req.body;
 
-    // Validate required fields
     if (!email || !password || !firstName || !lastName) {
       res.status(400).json({ 
         message: 'Please provide all required fields: email, password, firstName, lastName' 
       });
       return;
     }
-
-    // Check if user already exists
+ 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       res.status(400).json({ message: 'User already exists with this email' });
       return;
     }
 
-    // Hash password
+    
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
  
-    // Create new user
+  
     const newUser: IUser = new User({
       email,
       password: hashedPassword,
@@ -54,8 +51,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
     });
 
     const savedUser = await newUser.save();
-
-    // Generate JWT token
+ 
     const token = jwt.sign(
       { 
         userId: savedUser._id,
@@ -66,7 +62,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
       { expiresIn: '7d' }
     );
 
-    // Return user data (excluding password)
+     
    res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -100,29 +96,26 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
 
-    // Validate required fields
+   
     if (!email || !password) {
       res.status(400).json({ 
         message: 'Please provide both email and password' 
       });
       return;
     }
-
-    // Find user by email
+ 
     const user = await User.findOne({ email });
     if (!user) {
       res.status(401).json({ message: 'Invalid email or password' });
       return;
     }
-
-    // Check password
+ 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       res.status(401).json({ message: 'Invalid email or password' });
       return;
     }
-
-    // Generate JWT token
+ 
     const token = jwt.sign(
       { 
         userId: user._id,
@@ -192,7 +185,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 });
 
 
-// Get current user profile (protected route)
+//  current userprofile ( a protected route)
 router.get('/me', async (req: Request, res: Response): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;

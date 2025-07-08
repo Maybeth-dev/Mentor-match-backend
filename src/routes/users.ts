@@ -3,8 +3,7 @@ import User from '../models/User';
 import { authMiddleware } from '../middleware/auth';
 
 const router = express.Router();
-
-// GET /users/me- Get current user profile
+ 
 router.get('/me', authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.user.userId).select('-password');
@@ -18,8 +17,7 @@ router.get('/me', authMiddleware, async (req: Request, res: Response): Promise<v
     res.status(500).json({ message: 'Server error' });
   }
 });
-
-// PUT /users/me/profile -Update current user profile
+ 
 router.put('/me/profile', authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { 
@@ -64,8 +62,7 @@ router.put('/me/profile', authMiddleware, async (req: Request, res: Response): P
     res.status(500).json({ message: 'Server error' });
   }
 });
-
-// GET /users/:id-Get user by ID (public profile)
+ 
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.params.id).select('-password -email');
@@ -79,8 +76,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
-// GET /users - Get all mentors (for mentee to browse)
+ 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const { role, skills, page = 1, limit = 10 } = req.query;

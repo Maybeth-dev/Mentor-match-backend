@@ -3,8 +3,7 @@ import { authMiddleware } from '../middleware/auth';
 import Session from '../models/Session';
 
 const router = express.Router();
-
-// Schedule session
+ 
 router.post('/', authMiddleware, async (req: Request, res: Response): Promise<Response> => {
   try {
     const { mentorId, scheduledAt, duration } = req.body;
@@ -25,8 +24,7 @@ router.post('/', authMiddleware, async (req: Request, res: Response): Promise<Re
     return res.status(500).json({ message: 'Server error' });
   }
 });
-
-// Get mentee sessions
+ 
 router.get('/mentee', authMiddleware, async (req: Request, res: Response): Promise<Response> => {
   try {
     const sessions = await Session.find({ menteeId: req.user.userId })
@@ -37,8 +35,7 @@ router.get('/mentee', authMiddleware, async (req: Request, res: Response): Promi
     return res.status(500).json({ message: 'Error fetching mentee sessions' });
   }
 });
-
-// Get mentor sessions
+ 
 router.get('/mentor', authMiddleware, async (req: Request, res: Response): Promise<Response> => {
   try {
     const sessions = await Session.find({ mentorId: req.user.userId })
@@ -49,8 +46,7 @@ router.get('/mentor', authMiddleware, async (req: Request, res: Response): Promi
     return res.status(500).json({ message: 'Error fetching mentor sessions' });
   }
 });
-
-// Submit feedback
+ 
 router.put('/:id/feedback', authMiddleware, async (req: Request, res: Response): Promise<Response> => {
   try {
     const { rating, comment } = req.body;

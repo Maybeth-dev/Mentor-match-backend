@@ -1,6 +1,5 @@
  import mongoose, { Document, Schema } from 'mongoose';
-
-// Profile interface
+ 
 export interface IProfile {
   bio: string;
   skills: string[];
@@ -25,8 +24,7 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
-
-// Profile schema
+ 
 const ProfileSchema = new Schema<IProfile>({
   bio: { type: String, default: '' },
   skills: [{ type: String }],
@@ -38,7 +36,7 @@ const ProfileSchema = new Schema<IProfile>({
   portfolioUrl: { type: String, default: '' }
 }, { _id: false });
 
-// User schema
+ 
 const UserSchema = new Schema<IUser>({
   email: {
     type: String,
@@ -92,7 +90,7 @@ const UserSchema = new Schema<IUser>({
   timestamps: true,
   toJSON: {
     transform: function(doc, ret) {
-      // Convert _id to string to prevent path-to-regexp errors
+      // Convert _id to string to prevent path-to-regexp errors,unlike b4
       ret.id = ret._id.toString();
       delete ret._id;
       delete ret.__v;
@@ -103,7 +101,7 @@ const UserSchema = new Schema<IUser>({
 });
 
 // Indexes for better performance
-// Note: email index is already created by unique: true in schema
+// Note:email index is already created by unique:true in schema
 UserSchema.index({ role: 1 });
 UserSchema.index({ createdAt: -1 });
 
