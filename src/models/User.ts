@@ -89,15 +89,12 @@ const UserSchema = new Schema<IUser>({
 }, {
   timestamps: true,
   toJSON: {
-    transform: function(doc, ret) {
-      // Convert _id to string to prevent path-to-regexp errors,unlike b4
-      ret.id = ret._id.toString();
-      delete ret._id;
-      delete ret.__v;
-      delete ret.password;
-      return ret;
-    }
+  transform: function(doc, ret) {
+    ret._id = ret._id.toString(); // Keep _id field
+    delete ret.__v;
+    delete ret.password;
   }
+}
 });
 
 // Indexes for better performance

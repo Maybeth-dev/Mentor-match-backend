@@ -8,10 +8,12 @@ const router = express.Router();
 router.get('/users', authMiddleware, requireAdmin, async (req: Request, res: Response): Promise<Response> => {
   try {
     const users = await User.find().select('-password');
-    return res.status(200).json({ users });
+    return 
+    res.status(200).json({ success: true, data: { users }, pagination: { page, limit, total }});
+    // res.status(200).json({ users });
   } catch (err) {
     console.error('Error fetching users:', err);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ success:"false", message: 'Server error' });
   }
 });
 
@@ -34,7 +36,7 @@ router.put('/users/:id/role', authMiddleware, requireAdmin, async (req: Request,
       return res.status(404).json({ message: 'User not found' });
     }
 
-    return res.status(200).json({ message: 'Role updated', user });
+    return res.status(200).json({ success: "true",message: 'Role updated', user });
   } catch (err) {
     console.error('Error updating role:', err);
     return res.status(500).json({ message: 'Server error' });

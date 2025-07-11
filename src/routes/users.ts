@@ -52,14 +52,22 @@ router.put('/me/profile', authMiddleware, async (req: Request, res: Response): P
       res.status(404).json({ message: 'User not found' });
       return;
     }
-
-    res.status(200).json({ 
-      message: 'Profile updated successfully',
-      user: updatedUser 
-    });
+        res.status(201).json({
+      success: true,
+      data: populatedRequest,
+      message: "Mentorship request sent"
+       });
+    // res.status(200).json({ 
+    //   message: 'Profile updated successfully',
+    //   user: updatedUser 
+    // });
   } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({ message: 'Server error' });
+    // console.error('Update profile error:', error);
+    // res.status(500).json({ message: 'Server error' });
+      res.status(400).json({
+      success: false,
+      message: "You already have a pending request with this mentor"
+    });
   }
 });
  

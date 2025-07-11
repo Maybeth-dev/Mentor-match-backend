@@ -139,8 +139,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
     //     profile: user.profile
     //   }
     // });
-     res
-    .cookie('token', token, {
+     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',

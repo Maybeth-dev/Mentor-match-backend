@@ -3,30 +3,28 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/database';
 import authRoutes from './routes/auth';
- 
+import cookieParser from 'cookie-parser';
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-  const allowedOrigins = [
-    "http://localhost:3000",
-    "https://mentor-match-tau.vercel.app",
-    "https://mentor-match-mystes-projects-9eb0432a.vercel.app",
-    "https://mentor-match-git-main-mystes-projects-9eb0432a.vercel.app",
-    "https://mentor-match-r34yrspcm-mystes-projects-9eb0432a.vercel.app"
-  ];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://mentor-match-tau.vercel.app",
+  "https://mentor-match-mystes-projects-9eb0432a.vercel.app",
+  "https://mentor-match-git-main-mystes-projects-9eb0432a.vercel.app",
+  "https://mentor-match-r34yrspcm-mystes-projects-9eb0432a.vercel.app"
+];
 
- 
-  app.use(cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  }));
+
+ app.use(cors({
+  origin:  origin: process.env.NODE_ENV === 'development' ? true : allowedOrigins,
+  credentials: true,
+  exposedHeaders: ['set-cookie']  
+}));
+
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -34,8 +32,12 @@ console.log('🛣️  Setting up routes...');
 
 app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({ 
+    success:"true",
     message: 'mentorship-hub API is running!',
-    timestamp: new Date().toISOString(),
+    data:{
+       status:"OK",
+      timestamp: new Date().toISOString()
+    }
     environment: process.env.NODE_ENV || 'development',
     database: 'connected'  
   });

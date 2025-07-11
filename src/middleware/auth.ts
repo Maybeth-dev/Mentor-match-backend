@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
+app.use(cookieParser());
 
 // Extend Express Request interface to include user
 declare global {
@@ -17,9 +19,12 @@ declare global {
 export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.startsWith('Bearer ') 
-      ? authHeader.substring(7) 
-      : null;
+    const token = req.cookies.token || (authHeader && authHeader.startsWith('Bearer ') 
+    ? authHeader.substring(7) 
+    : null);
+    // const token = authHeader && authHeader.startsWith('Bearer ') 
+    //   ? authHeader.substring(7) 
+    //   : null;
     
     if (!token) {
       res.status(401).json({ message: 'No token provided' });
