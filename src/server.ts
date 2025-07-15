@@ -18,17 +18,24 @@ const allowedOrigins = [
 ];
 
 
- app.use(cors({
-  origin:  origin: process.env.NODE_ENV === 'development' ? true : allowedOrigins,
-  credentials: true,
-  exposedHeaders: ['set-cookie']  
-}));
-
+ 
 app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-console.log('🛣️  Setting up routes...');
+ 
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
+console.log('🛣️ Setting up routes...');
 
 app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({ 
@@ -37,7 +44,7 @@ app.get('/api/health', (req: Request, res: Response) => {
     data:{
        status:"OK",
       timestamp: new Date().toISOString()
-    }
+    },
     environment: process.env.NODE_ENV || 'development',
     database: 'connected'  
   });
